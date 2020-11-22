@@ -1,8 +1,8 @@
 import pyaudio
 import numpy as np
 import sys
-# import librosa
-import parselmouth
+import librosa # sound analysis
+import parselmouth # https://parselmouth.readthedocs.io/en/stable/
 
 CHUNK = 2**15
 RATE = 44100
