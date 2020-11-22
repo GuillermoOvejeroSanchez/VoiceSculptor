@@ -60,7 +60,7 @@ public class AudioTest : MonoBehaviour
     {
         float fundamentalFrequency = 0.0f;
         float[] spectrum = new float[samples];
-        audioSource.GetSpectrumData(spectrum, 0, FFTWindow.Rectangular);
+        audioSource.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
 
         float s = 0.0f;
         int k = 0;
@@ -94,7 +94,7 @@ public class AudioTest : MonoBehaviour
             a0 = Mathf.Log(spectrum[i - 1]) + 10;
             a1 = Mathf.Log(spectrum[i]) + 10;
             Debug.DrawLine(new Vector3(i - 1, a0, 2), new Vector3(i, a1, 2), Color.cyan);
-            //Debug.DrawLine(new Vector3(i - 1, Mathf.Log(spectrum[i - 1]), 3), new Vector3(i, Mathf.Log(spectrum[i]), 3), Color.blue);
+            Debug.DrawLine(new Vector3(i - 1, Mathf.Log(spectrum[i - 1]), 3), new Vector3(i, Mathf.Log(spectrum[i]), 3), Color.blue);
         }
     }
 
