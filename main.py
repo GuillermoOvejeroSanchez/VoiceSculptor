@@ -17,13 +17,13 @@ logging.basicConfig(level=logging.INFO, filename='./logs/formants.log',
 
 
 # CHUNK / RATE = Time of data to process
-CHUNK = 2**15  # Bytes of data to process
+CHUNK = 2**15  # Bytes of data to process (For speech_rate need 2**18 aprox)
 RATE = 44100
 TIME_WINDOW = CHUNK / RATE
 SEC = 5 / TIME_WINDOW
 ISWAVFILE = False
-
 print(TIME_WINDOW)
+
 
 def log_snd(snd, i):
     intensity = snd.to_intensity()
@@ -53,18 +53,21 @@ else:
     p = pyaudio.PyAudio()
     stream = p.open(format=pyaudio.paInt16, channels=1, rate=RATE, input=True, frames_per_buffer=CHUNK)
 
-    while True:  # go for a few seconds
+    time_elapsed = 0
+    while time_elapsed < 10:  # go for a few seconds
         data = np.frombuffer(stream.read(CHUNK), dtype=np.int16)
         snd = parselmouth.Sound(data)  # Default sr = 44.1KHz)
+        logging.info(speech_rate(snd))
         intensity = snd.to_intensity()
         pitch = snd.to_pitch()
         formant = snd.to_formant_burg(time_step=0.5)
         for j in np.arange(0, TIME_WINDOW, 0.5):
             log_snd(snd,j)
+        time_elapsed += TIME_WINDOW
         sys.stdout.flush()
-        p.terminate()
-        stream.stop_stream()
-        stream.close()
+    p.terminate()
+    stream.stop_stream()
+    stream.close()
 
 print("Ending...")
 

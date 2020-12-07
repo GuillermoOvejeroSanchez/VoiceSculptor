@@ -128,12 +128,11 @@ def speech_rate(filename):
             timepeaks.append(t[i])
 
     # fill array with valid peaks: only intensity values if preceding
-    # dip in intensity is greater than mindip
+# dip in intensity is greater than mindip
     validpeakcount = 0
     currenttime = timepeaks[0]
     currentint = intensities[0]
     validtime = []
-
     for p in range(peakcount - 1):
         following = p + 1
         followingtime = timepeaks[p + 1]
@@ -173,16 +172,19 @@ def speech_rate(filename):
     speakingrate = voicedcount / originaldur
     articulationrate = voicedcount / speakingtot
     npause = npauses - 1
-    asd = speakingtot / voicedcount
+    try:
+        asd = speakingtot / voicedcount
+    except ZeroDivisionError:
+        asd = 0
     speechrate_dictionary = {
-                             'sound':filename,
-                             'nsyll':voicedcount,
+                             'sound': filename,
+                             'nsyll': voicedcount,
                              'npause': npause,
-                             'dur(s)':originaldur,
-                             'phonationtime(s)':intensity_duration,
+                             'dur(s)': originaldur,
+                             'phonationtime(s)': intensity_duration,
                              'speechrate(nsyll / dur)': speakingrate,
-                             "articulation rate(nsyll / phonationtime)":articulationrate,
-                             "ASD(speakingtime / nsyll)":asd}
+                             "articulation rate(nsyll / phonationtime)": articulationrate,
+                             "ASD(speakingtime / nsyll)": asd}
     return speechrate_dictionary
 
 
