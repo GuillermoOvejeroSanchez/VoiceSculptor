@@ -7,3 +7,4 @@
 .idea/vcs.xml
 sounds/asr-spanish
 requirements.txt
+.vscode/*
