@@ -9,28 +9,34 @@ from jinja2 import Environment, FileSystemLoader
 from flask import Flask, render_template, request
 import matplotlib
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 app = Flask(__name__)
 
 
 def draw_intensity(intensity):
+    sns.set()
+    plt.rcParams['figure.dpi'] = 150
     plt.plot(intensity.xs(), intensity.values.T, linewidth=3, color='w')
     plt.plot(intensity.xs(), intensity.values.T, linewidth=1)
-    plt.grid(False)
+    plt.grid(True)
     plt.ylim(0)
     plt.ylabel("intensity [dB]")
 
-def draw_pitch(pitch):
-    # Extract selected pitch contour, and
-    # replace unvoiced samples by NaN to not plot
+def plotOnGraph(pitch, color):
     pitch_values = pitch.selected_array['frequency']
     pitch_values[pitch_values==0] = np.nan
-    plt.plot(pitch.xs(), pitch_values, linewidth=3, color='w')
-    plt.plot(pitch.xs(), pitch_values, linewidth=1)
-    plt.grid(False)
-    plt.ylim(0, pitch.ceiling)
-    plt.ylabel("fundamental frequency [Hz]")
+    plt.plot(pitch.xs(), pitch_values, 'o', markersize=2.5, color=color)
+    
+def setupGraph(ymin, ymax):
+    sns.set() # Use seaborn's default style to make attractive graphs
+    plt.rcParams['figure.dpi'] = 150 # Show images nicely
+    plt.figure()
+    plt.ylim(ymin, ymax)
+    plt.ylabel("frequency [Hz]")
+    plt.xlabel("seconds")
+    plt.grid(True)
 
 
 @app.after_request
@@ -62,9 +68,8 @@ def report():
     plt.savefig("static/intensity.png")
 
     pitch = snd.to_pitch()
-    plt.figure()
-    draw_pitch(pitch)
-    plt.xlim([snd.xmin, snd.xmax])
+    setupGraph(0, pitch.ceiling)
+    plotOnGraph(pitch, 'r')
     plt.savefig("static/pitch.png")
 
     env = Environment(loader=FileSystemLoader('.'))
