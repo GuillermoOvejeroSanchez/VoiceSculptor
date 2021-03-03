@@ -1,0 +1,32 @@
+,0,1
+0,sound,"Object type: Sound
+Object name: <no name>
+Date: Wed Mar  3 16:34:21 2021
+
+Number of channels: 2 (stereo)
+Time domain:
+   Start time: 0 seconds
+   End time: 51.52181405895691 seconds
+   Total duration: 51.52181405895691 seconds
+Time sampling:
+   Number of samples: 2272112
+   Sampling period: 2.2675736961451248e-05 seconds
+   Sampling frequency: 44100 Hz
+   First sample centred at: 1.1337868480725624e-05 seconds
+Amplitude:
+   Minimum: -0.664245605 Pascal
+   Maximum: 0.570251465 Pascal
+   Mean: 6.52592014e-06 Pascal
+   Root-mean-square: 0.0435483558 Pascal
+Total energy: 0.0977090232 Pascal² sec (energy in air: 0.000244272558 Joule/m²)
+Mean power (intensity) in air: 4.74114824e-06 Watt/m² = 66.76 dB
+Standard deviation in channel 1: 0.0435499926 Pascal
+Standard deviation in channel 2: 0.0435467372 Pascal
+"
+1,nsyll,190
+2,npause,13
+3,dur(s),51.52181405895691
+4,phonationtime(s),51.52181405895691
+5,speechrate(nsyll / dur),3.6877583499404962
+6,articulation rate(nsyll / phonationtime),4.422625431758875
+7,ASD(speakingtime / nsyll),0.226110036997255

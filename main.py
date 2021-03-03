@@ -3,7 +3,8 @@ import sys
 import numpy as np
 import parselmouth  # https://parselmouth.readthedocs.io/en/stable/
 import pyaudio
-
+import os
+import pandas as pd
 from syllabe_nuclei import speech_rate
 '''
 Installed on conda environment on W10
@@ -21,7 +22,7 @@ CHUNK = 2**15  # Bytes of data to process (For speech_rate need 2**18 aprox)
 RATE = 44100
 TIME_WINDOW = CHUNK / RATE
 SEC = 5 / TIME_WINDOW
-ISWAVFILE = False
+ISWAVFILE = True
 print(TIME_WINDOW)
 
 
@@ -35,19 +36,39 @@ def log_snd(snd, i):
     logging.info("F1={}".format(f1))
     logging.info("F2={}".format(f2))
     logging.info("Intensity={}".format(np.mean(intensity.values - 20)))
-    #logging.info("Pitch={}".format(pitch.selected_array['frequency']))
+    logging.info("Pitch={}".format(np.mean(pitch.selected_array['frequency'])))
     logging.info("time_windows={}".format(i))
 
+
 if ISWAVFILE:
-    datasnd = parselmouth.Sound('./sounds/pulp-fiction.wav')
-    for i in np.arange(0., datasnd.duration, TIME_WINDOW):  # go for a few seconds
-        snd = datasnd.extract_part(from_time=i, to_time=i+TIME_WINDOW)
-        logging.info(speech_rate(snd))
-        intensity = snd.to_intensity()
-        pitch = snd.to_pitch()
-        formant = snd.to_formant_burg(time_step=0.05)
-        for j in np.arange(0., TIME_WINDOW, 0.05):
-            log_snd(snd, j)
+    for file in os.listdir('./sounds'):
+        if file.endswith(".wav"):
+            print(file)
+            snd = parselmouth.Sound('./sounds/' + file)
+            csv = speech_rate(snd)
+            csv.to_csv('speechrate_data1.csv')
+            logging.info(csv)
+            intensity = snd.to_intensity()
+            pitch = snd.to_pitch()
+            logging.info("Intensity={}".format(np.mean(intensity.values - 20)))
+            logging.info("Pitch={}".format(np.mean(pitch.selected_array['frequency'])))
+
+elif ISWAVFILE:
+    for file in os.listdir('./sounds'):
+        if file.endswith(".wav"):
+            print(file)
+            datasnd = parselmouth.Sound('./sounds/' + file)
+            for i in np.arange(0., datasnd.duration, TIME_WINDOW):  # go for a few seconds
+                snd = datasnd.extract_part(from_time=i, to_time=i+TIME_WINDOW)
+                csv = speech_rate(snd)
+                logging.info(csv)
+
+                intensity = snd.to_intensity()
+                pitch = snd.to_pitch()
+                formant = snd.to_formant_burg(time_step=0.05)
+                for j in np.arange(0., TIME_WINDOW, 0.05):
+                    log_snd(snd, j)
+
 
 else:
     p = pyaudio.PyAudio()
