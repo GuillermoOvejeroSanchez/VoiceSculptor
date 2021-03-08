@@ -1,4 +1,3 @@
-{'sound': <parselmouth.Sound object at 0x00000203AF74A870>, 'nsyll': 0, 'npause': 0, 'dur(s)': 0.7430385487528345, 'phonationtime(s)': 0.7430385487528345, 'speechrate(nsyll / dur)': 0.0, 'articulation rate(nsyll / phonationtime)': 0.0, 'ASD(speakingtime / nsyll)': 0}
 {'sound': <parselmouth.Sound object at 0x000002882A3E5DB0>, 'nsyll': 3, 'npause': 0, 'dur(s)': 0.7430385487528345, 'phonationtime(s)': 0.7430385487528345, 'speechrate(nsyll / dur)': 4.0374755859375, 'articulation rate(nsyll / phonationtime)': 4.0374755859375, 'ASD(speakingtime / nsyll)': 0.24767951625094484}
 F1=nan
 F2=nan
