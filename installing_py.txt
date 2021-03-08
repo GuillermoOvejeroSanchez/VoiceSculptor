@@ -1,0 +1,7 @@
+choco install python --version=3.8.0
+python -m pip install -U pip
+pip install setuptools
+pip install pipenv
+pip install wheel
+pip install .\PyAudio-0.2.11-cp38-cp38-win_amd64.whl
+pip install matplotlib

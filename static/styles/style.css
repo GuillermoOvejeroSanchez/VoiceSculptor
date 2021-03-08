@@ -1,0 +1,13 @@
+html {
+    border: solid 2px cornflowerblue;
+}
+
+.center {
+    margin: auto;
+    width: 50%;
+    text-align: center;
+    
+}
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}

@@ -189,18 +189,40 @@ def speech_rate(filename):
 
 
 def get_files():
-    files = glob('sounds/*.wav')
-    return files
+    files = glob('sounds/asr-spanish-v1-carlfm01/audios/*.wav')
+    return files[:5000]
+
+def syllable_count(word):
+    word = word.lower()
+    count = 0
+    vowels = "aeiouy"
+    if word[0] in vowels:
+        count += 1
+    for index in range(1, len(word)):
+        if word[index] in vowels and word[index - 1] not in vowels:
+            count += 1
+    if word.endswith("e"):
+        count -= 1
+    if count == 0:
+        count += 1
+    return count
 
 
 if __name__ == "__main__":
     files = get_files()
     cols = ['soundname', 'nsyll', 'npause', 'dur(s)', 'phonationtime(s)', 'speechrate(nsyll / dur)', 'articulation '
-            'rate(nsyll / phonationtime)', 'ASD(speakingtime / nsyll)']
+                                                                                                     'rate(nsyll / phonationtime)',
+            'ASD(speakingtime / nsyll)']
     datalist = []
+
+    df_files = pd.read_csv('files_nsyll.csv')
+    df_files.set_index("wav_filename", inplace=True)
+    #df_files.loc["audios/"+file.split('\\')[-1], ["transcript"]]:
+
+    n = len(files)
+    i = 0
     for file in files:
         speechrate_dictionary = speech_rate(file)
         datalist.append(speechrate_dictionary)
     df = pd.DataFrame(datalist)
     df.to_csv('speechrate_data.csv')
-    print("Ending...")
