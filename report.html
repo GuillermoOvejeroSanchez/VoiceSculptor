@@ -10,23 +10,26 @@
 <body>
     <div class="center">
         <h1>Resultados de su charla {{ file }}</h1>
+        <hr class="rounded">
         <h2>Transcripcion</h2>
         {{ transcripcion }}
         <h2>Pausas/Velocidad</h2>
         <h3>Tabla con informacion relacionada</h3>
-        <div class="center">    
-            {{ velocimetro }}
-        </div>
+        {{ velocimetro }}
         <h3>Pausas</h3>
-        <div class="center">
-            {{ pausas }}
-        </div>
-        <h2>Intensidad</h2>
-        <img src="static/intensity.png" alt="Intensidad">
-        <h2>Tono</h2>
-        <img src="/static/pitch.png" alt="Pitch">
-        <h2>Palabras de Relleno</h2>
-            WIP
+        {{ pausas }}
     </div>
+        <h2 class="center">Audio</h2>
+        <audio controls>
+            <source src="static/sounds/{{ file }}" type="audio/wav">   
+         </audio>    
+        <h2 class=center>Onda</h2>
+        <img class="plot" src="static/img/wave.png" alt="Onda">
+        <h2 class=center>Intensidad</h2>
+        <img class="plot" src="static/img/intensity.png" alt="Intensidad">
+        <h2 class=center>Tono</h2>
+        <img class="plot" src="/static/img/pitch.png" alt="Pitch">
+        <h2 class=center>Palabras de Relleno</h2>
+           <p class="center">WIP</p>
 </body>
 </html>

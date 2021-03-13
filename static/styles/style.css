@@ -2,8 +2,24 @@ html {
     border: solid 2px cornflowerblue;
 }
 
+hr.rounded {
+    border-style: none;
+    border-top: 6px solid #bbb;
+    border-radius: 4px;
+  }
+
+.dataframe {
+    margin: auto;
+}
+
+.plot {
+    margin: auto;
+    width: 100%;
+}
+
 .center {
     margin: auto;
+    margin-top: 5%;
     width: 50%;
     text-align: center;
     
