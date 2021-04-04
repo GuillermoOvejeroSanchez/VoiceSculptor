@@ -11,3 +11,7 @@ pip install pandas
 pip install seaborn
 pip install flask
 pip install jinja2
+tableau visualizacion
+spark
+airflow orquestador
+hadoop y hbase
