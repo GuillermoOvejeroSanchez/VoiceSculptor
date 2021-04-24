@@ -16,7 +16,6 @@ https://docs.conda.io/projects/conda/en/4.6.0/_downloads/52a95608c49671267e40c68
 logging.basicConfig(level=logging.INFO, filename='./logs/formants.log',
                     filemode='w', format='%(message)s')
 
-
 # CHUNK / RATE = Time of data to process
 CHUNK = 2**15  # Bytes of data to process (For speech_rate need 2**18 aprox)
 RATE = 44100
@@ -41,19 +40,6 @@ def log_snd(snd, i):
 
 
 if ISWAVFILE:
-    for file in os.listdir('./sounds'):
-        if file.endswith(".wav"):
-            print(file)
-            snd = parselmouth.Sound('./sounds/' + file)
-            csv = speech_rate(snd)
-            csv.to_csv('speechrate_data1.csv')
-            logging.info(csv)
-            intensity = snd.to_intensity()
-            pitch = snd.to_pitch()
-            logging.info("Intensity={}".format(np.mean(intensity.values - 20)))
-            logging.info("Pitch={}".format(np.mean(pitch.selected_array['frequency'])))
-
-elif ISWAVFILE:
     for file in os.listdir('./sounds'):
         if file.endswith(".wav"):
             print(file)

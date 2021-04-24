@@ -8,3 +8,5 @@
 sounds/asr-spanish
 requirements.txt
 .vscode/*
+*.pyc
+StreamAnalyzer/data.log

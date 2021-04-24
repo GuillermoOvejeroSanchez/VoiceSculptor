@@ -4,6 +4,8 @@ pip install setuptools
 pip install pipenv
 pip install wheel
 pip install .\PyAudio-0.2.11-cp38-cp38-win_amd64.whl
+pip install sounddevice
+pip install numpy_ringbuffer
 pip install praat-parselmouth
 pip install numpy
 pip install matplotlib
