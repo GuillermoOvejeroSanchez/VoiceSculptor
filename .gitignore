@@ -10,3 +10,4 @@ requirements.txt
 .vscode/*
 *.pyc
 StreamAnalyzer/data.log
+*.rdb
