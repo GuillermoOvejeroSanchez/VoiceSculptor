@@ -83,7 +83,7 @@ while True:
         fig.canvas.draw()
         fig.canvas.flush_events()
         frame_count += 1
-        
+        print(data_np)
     except TclError:
         
         # calculate average frame rate
