@@ -25,16 +25,14 @@ import queue
 """
 Installed on conda environment on W10
 https://docs.conda.io/projects/conda/en/4.6.0/_downloads/52a95608c49671267e40c689e0bc00ca/conda-cheatsheet.pdf
-
 """
-
 
 np.set_printoptions(threshold=sys.maxsize)
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 
 CHUNK = 1024  # Bytes of data to process
 RATE = 44100 // 2
-SECS = 5
+SECS = 10
 BUFFER_SIZE = RATE * SECS  # BUFFER SIZE
 REDIS_PITCH = "PITCH"
 REDIS_INTENSITY = "INTENSITY"
@@ -66,12 +64,11 @@ time_elapsed = 0
 start_time = 0
 last_update = 0
 
-r = redis.Redis()
-r.flushall()
 p = pyaudio.PyAudio()
 buffer = RingBuffer(capacity=(BUFFER_SIZE), dtype=np.int16)
 recorded_frames = queue.Queue()
 
+# Voicemeteer Potato/Banana
 for device_index in range(p.get_device_count()):
     device_info = p.get_device_info_by_index(device_index)
     if device_info["maxInputChannels"] > 0:
@@ -85,7 +82,7 @@ stream = p.open(
     output=False,
     frames_per_buffer=CHUNK,
     stream_callback=callback,
-    input_device_index=1,
+    # input_device_index=1,
 )
 time.sleep(1)
 
@@ -96,14 +93,11 @@ while time_elapsed <= 40:  # go for a few seconds
         ini = time.time()
         buff = np.array(buffer)
         snd = parselmouth.Sound(buff, sampling_frequency=RATE)
-        print(snd.duration)
+        # print(snd.duration)
         intensity = snd.to_intensity(50)
         pitch = snd.to_pitch()
-        pitch_values = pitch.selected_array['frequency']
-        ### Time Elapsed ###
-        r.xadd(REDIS_INTENSITY, {"intensity": intensity.values.T.tobytes(), "seconds": intensity.xs().tobytes()})
-        r.xadd(REDIS_PITCH, {"pitch": pitch_values.tobytes(), "seconds": pitch.xs().tobytes()})
-        # time.sleep(1)
+        pitch_values = pitch.selected_array["frequency"]
+        print(speech_rate(sound=snd))
         time_elapsed = time.time() - start_time
         # print("Time elapsed:", time_elapsed)
 signal_handler()
