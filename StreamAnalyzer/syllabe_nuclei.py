@@ -68,12 +68,11 @@ from glob import glob
 from parselmouth.praat import call
 
 
-def speech_rate(filename=None, sound=None):
+def speech_rate(sound=None):
+    filename = ""
     silencedb = -25
     mindip = 2
     minpause = 0.3
-    if sound is None:
-        sound = parselmouth.Sound(filename)
     originaldur = sound.get_total_duration()
     intensity = sound.to_intensity(50)
     start = call(intensity, "Get time from frame number", 1)
