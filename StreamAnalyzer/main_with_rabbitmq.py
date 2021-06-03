@@ -67,8 +67,8 @@ def signal_handler(signal=None, frame=None):
 signal.signal(signal.SIGINT, signal_handler)
 signal.signal(signal.SIGTERM, signal_handler)
 
-fps = 60  # Number of frames per seconds
-time_elapsed = 0
+fps = 4  # Number of frames per seconds
+time_elapsed = 1
 start_time = 0
 last_update = 0
 
@@ -99,21 +99,21 @@ while time_elapsed <= 40:  # go for a few seconds
             future = executor.submit(speech_rate, snd)
             executor.shutdown()
         # srate = speech_rate(sound=snd)
-        print(snd.duration)
-        intensity = snd.to_intensity()
-        int_values = intensity.values
-        channel.basic_publish(
-            exchange="", routing_key="sound_data", body=int_values.tobytes()
-        )
+        # intensity = snd.to_intensity()
+        # int_values = intensity.values
+        # channel.basic_publish(
+        #     exchange="", routing_key="sound_data", body=int_values.tobytes()
+        # )
 
-        pitch = snd.to_pitch()
-        pitch_values = pitch.selected_array["frequency"]
-        channel.basic_publish(
-            exchange="",
-            routing_key="sound_data",
-            body=pitch_values.tobytes(),
-        )
+        # pitch = snd.to_pitch()
+        # pitch_values = pitch.selected_array["frequency"]
+        # channel.basic_publish(
+        #     exchange="",
+        #     routing_key="sound_data",
+        #     body=pitch_values.tobytes(),
+        # )
         time_elapsed = time.time() - start_time
+        print(snd.duration)
 
         srate = future.result()
         channel.basic_publish(exchange="", routing_key="sound_data", body=dumps(srate))
