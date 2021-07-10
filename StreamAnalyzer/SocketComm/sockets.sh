@@ -1,4 +1,4 @@
 #!/bin/bash
 
-python listener.py &
-python client.py &
+python main_listener.py &
+python main_client.py &

@@ -2,14 +2,7 @@ choco install python --version=3.8.0
 python -m pip install -U pip
 pip install setuptools
 pip install pipenv
+pipenv shell
 pip install wheel
 pip install .\PyAudio-0.2.11-cp38-cp38-win_amd64.whl
-pip install sounddevice
-pip install numpy_ringbuffer
-pip install praat-parselmouth
-pip install numpy
-pip install matplotlib
-pip install pandas
-pip install seaborn
-pip install flask
-pip install jinja2
+pip install -r requirements.txt

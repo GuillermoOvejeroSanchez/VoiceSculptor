@@ -1,5 +1,15 @@
 # TFG 2020 : Analizador de Voz
 
+## Iniciar Proyecto
+
+Windows: instalar PyAudio desde el fichero .whl
+
+Instalar el resto de paquetes necesarios, desde requirements.txt o creando un pipenv y ejecutando:
+
+```bash
+pipenv install
+```
+
 ## Report
 
 Usa un servidor de Flask donde muestra la informacion sobre pausas, velocidad, intensidad, pitch

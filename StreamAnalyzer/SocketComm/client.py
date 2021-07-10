@@ -4,14 +4,15 @@ import time
 
 
 class Client:
-    HOST = "localhost"  # The remote host
-    PORT = 50007  # The same port as used by the server
+    HOST = "127.0.0.1"  # The remote host
+    PORT = 2345  # The same port as used by the server
 
     def __init__(self) -> None:
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connect()
 
     def connect(self):
+        print("Connection")
         self.s.connect((self.HOST, self.PORT))
 
     def send(self, msg):

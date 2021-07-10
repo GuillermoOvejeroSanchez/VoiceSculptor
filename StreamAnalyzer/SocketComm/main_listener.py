@@ -5,8 +5,8 @@ import numpy as np
 from json import loads
 
 # ---- Configuration ----
-HOST = ""  # Symbolic name meaning all available interfaces
-PORT = 50007  # Arbitrary non-privileged port
+HOST = "127.0.0.1"  # Symbolic name meaning all available interfaces
+PORT = 2345  # Arbitrary non-privileged port
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
 s.listen(1)
@@ -14,7 +14,7 @@ readable = [s]  # list of readable sockets. s is readable if a client is waiting
 i = 0
 # -----------------------
 
-nsyll = 0
+nsyll:int = 0
 
 
 def process_data(data: bytes, i: int):
@@ -31,7 +31,9 @@ def process_data(data: bytes, i: int):
 while True:
     # r will be a list of sockets with readable data
     r, w, e = select.select(readable, [], [], 0)
+    rs: socket.socket
     for rs in r:  # iterate through readable sockets
+        print((type(rs)))
         if rs is s:  # is it the server
             c, a = s.accept()
             print(c, a)

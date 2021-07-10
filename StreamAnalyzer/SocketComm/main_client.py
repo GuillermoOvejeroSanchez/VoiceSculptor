@@ -10,7 +10,6 @@ import pyaudio
 import sounddevice as sa
 import os
 import time
-import pika
 import concurrent.futures
 import pandas as pd
 from json import dumps
@@ -21,7 +20,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.interpolate import make_interp_spline, BSpline
 import pickle
-import redis
 from scipy.io import wavfile
 import queue
 
