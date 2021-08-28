@@ -1,13 +1,14 @@
-import pandas as pd
-import numpy as np
-import plotly.express as px
-import plotly.graph_objects as go
-from jupyter_dash import JupyterDash
+import json
+
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
-import json
+import numpy as np
+import pandas as pd
 import pika
+import plotly.express as px
+import plotly.graph_objects as go
+from dash.dependencies import Input, Output
+from jupyter_dash import JupyterDash
 
 # code and plot setup
 # settings

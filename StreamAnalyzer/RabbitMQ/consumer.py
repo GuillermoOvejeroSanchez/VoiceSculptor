@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-import pika, sys, os
+import os
+import sys
+
+import pika
 
 
 def main():

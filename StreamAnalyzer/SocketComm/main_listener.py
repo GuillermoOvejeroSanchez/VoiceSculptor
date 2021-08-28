@@ -1,8 +1,9 @@
 # Echo server program
-import socket
 import select
-import numpy as np
+import socket
 from json import loads
+
+import numpy as np
 
 # ---- Configuration ----
 HOST = "127.0.0.1"  # Symbolic name meaning all available interfaces
@@ -14,20 +15,23 @@ readable = [s]  # list of readable sockets. s is readable if a client is waiting
 i = 0
 # -----------------------
 
-nsyll:int = 0
+nsyll: int = 0
 
 
 def process_data(data: bytes, i: int):
     global nsyll
-    data_string: str = data.decode("utf-8")
-    data_dict: dict = loads(data_string)
-    if i % 10 == 0:
-        nsyll += data_dict["nsyll"]
-    print(data_dict)
-    print(nsyll)
+    data = np.frombuffer(data)
+    print(data)
+    # data_string: str = data.decode("utf-8")
+    # data_dict: dict = loads(data_string)
+    # if i % 10 == 0:
+    #     nsyll += data_dict["nsyll"]
+    # print(data_dict)
+    # print(nsyll)
 
 
 # ---- Listener ----
+# TODO Make GUI here
 while True:
     # r will be a list of sockets with readable data
     r, w, e = select.select(readable, [], [], 0)

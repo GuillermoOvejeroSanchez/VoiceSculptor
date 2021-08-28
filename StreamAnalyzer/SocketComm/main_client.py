@@ -1,29 +1,29 @@
+import concurrent.futures
 import logging
-import sys
+import os
+import pickle
+import queue
 import signal
+import sys
+import time
+from json import dumps
+from threading import Thread
+
+import matplotlib.pyplot as plt
 import numpy as np
-from numpy.core.fromnumeric import shape
-from numpy_ringbuffer import RingBuffer
-from numpy.core.numeric import full
+import pandas as pd
 import parselmouth  # https://preaderselmouth.readthedocs.io/en/stable/
 import pyaudio
-import sounddevice as sa
-import os
-import time
-import concurrent.futures
-import pandas as pd
-from json import dumps
-from syllabe_nuclei import speech_rate
-from threading import Thread
-from matplotlib.animation import FuncAnimation
-import matplotlib.pyplot as plt
 import seaborn as sns
-from scipy.interpolate import make_interp_spline, BSpline
-import pickle
-from scipy.io import wavfile
-import queue
-
+import sounddevice as sa
 from client import Client
+from matplotlib.animation import FuncAnimation
+from numpy.core.fromnumeric import shape
+from numpy.core.numeric import full
+from numpy_ringbuffer import RingBuffer
+from scipy.interpolate import BSpline, make_interp_spline
+from scipy.io import wavfile
+from syllabe_nuclei import speech_rate
 
 """
 Installed on conda environment on W10
@@ -34,8 +34,6 @@ CHUNK = 1024  # Bytes of data to process
 RATE = 44100 // 2
 SECS = 10
 BUFFER_SIZE = RATE * SECS  # BUFFER SIZE
-REDIS_PITCH = "PITCH"
-REDIS_INTENSITY = "INTENSITY"
 FPS = 1  # Number of frames per seconds
 
 
@@ -71,7 +69,8 @@ start_time = 0
 last_update = 0
 
 p = pyaudio.PyAudio()
-buffer = RingBuffer(capacity=(BUFFER_SIZE), dtype=np.int16)
+buffer = RingBuffer(capacity=(BUFFER_SIZE), dtype=np.float64)
+buffer.extend(np.zeros(shape=BUFFER_SIZE))
 recorded_frames = queue.Queue()
 
 
@@ -102,7 +101,8 @@ def get_pitch(snd):
 
 
 start_time = time.time()
-while time_elapsed <= 40:  # go for a few seconds
+previous_len = 0
+while time_elapsed <= 1024:  # go for a few seconds
     if (time.time() - last_update) > (1.0 / FPS):
         last_update = time.time()
         buff = np.array(buffer)
@@ -116,13 +116,14 @@ while time_elapsed <= 40:  # go for a few seconds
             pitch = future_pitch.result()
             srate = future_srate.result()
 
-        int_values = intensity.values
-        pitch_values = pitch.selected_array["frequency"]
-        print(srate)
+        int_values: np.ndarray = intensity.values
+        pitch_values: np.ndarray = pitch.selected_array["frequency"]
+        # c.send(dumps(srate))
+        vector_bytes = int_values.tobytes()
+        c.send(vector_bytes)
 
         time_elapsed = time.time() - start_time
         print(snd.duration)
         print("Time to run loop:", time.time() - last_update)
         print("Time elapsed:", time_elapsed)
-        c.send(dumps(srate))
 signal_handler()

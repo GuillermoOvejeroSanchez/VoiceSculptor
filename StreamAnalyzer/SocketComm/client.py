@@ -2,6 +2,8 @@
 import socket
 import time
 
+import numpy as np
+
 
 class Client:
     HOST = "127.0.0.1"  # The remote host
@@ -15,8 +17,8 @@ class Client:
         print("Connection")
         self.s.connect((self.HOST, self.PORT))
 
-    def send(self, msg):
-        self.s.sendall(bytes(msg, "utf-8"))
+    def send(self, msg: bytes):
+        self.s.sendall(msg)
 
     def recv(self, size=1024):
         data = self.s.recv(size)

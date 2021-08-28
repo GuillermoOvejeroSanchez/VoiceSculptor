@@ -1,14 +1,17 @@
 #!/usr/bin/env python
-from numpy import loads
-import pika, sys, os
-import pandas as pd
 import json
+import os
+import sys
+import time
+from datetime import datetime
+
+import dash
+import numpy as np
+import pandas as pd
+import pika
 import plotly
 import requests
-from datetime import datetime
-import numpy as np
-import time
-import dash
+from numpy import loads
 
 
 def main():

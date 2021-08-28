@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-import pika
-from threading import Thread
 import multiprocessing.dummy as mp
 import time
+from threading import Thread
+
+import pika
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(host="localhost"))
 channel = connection.channel()

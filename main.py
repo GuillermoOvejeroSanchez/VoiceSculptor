@@ -1,10 +1,11 @@
 import logging
+import os
 import sys
+
 import numpy as np
+import pandas as pd
 import parselmouth  # https://parselmouth.readthedocs.io/en/stable/
 import pyaudio
-import os
-import pandas as pd
 from syllabe_nuclei import speech_rate
 
 """

@@ -1,29 +1,30 @@
-import logging
-import sys
-import signal
-import numpy as np
-from numpy.core.fromnumeric import shape
-from numpy_ringbuffer import RingBuffer
-from numpy.core.numeric import full
-import parselmouth  # https://preaderselmouth.readthedocs.io/en/stable/
-import pyaudio
-import sounddevice as sa
-import os
-import time
-import pika
 import concurrent.futures
-import pandas as pd
-from json import dumps
-from syllabe_nuclei import speech_rate
-from threading import Thread
-from matplotlib.animation import FuncAnimation
-import matplotlib.pyplot as plt
-import seaborn as sns
-from scipy.interpolate import make_interp_spline, BSpline
+import logging
+import os
 import pickle
-import redis
-from scipy.io import wavfile
 import queue
+import signal
+import sys
+import time
+from json import dumps
+from threading import Thread
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import parselmouth  # https://preaderselmouth.readthedocs.io/en/stable/
+import pika
+import pyaudio
+import redis
+import seaborn as sns
+import sounddevice as sa
+from matplotlib.animation import FuncAnimation
+from numpy.core.fromnumeric import shape
+from numpy.core.numeric import full
+from numpy_ringbuffer import RingBuffer
+from scipy.interpolate import BSpline, make_interp_spline
+from scipy.io import wavfile
+from syllabe_nuclei import speech_rate
 
 """
 Installed on conda environment on W10

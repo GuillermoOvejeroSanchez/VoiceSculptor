@@ -61,10 +61,10 @@
 # I changed all the variable names so they are human readable
 
 import math
+from glob import glob
+
 import pandas as pd
 import parselmouth
-
-from glob import glob
 from parselmouth.praat import call
 
 
@@ -93,7 +93,15 @@ def speech_rate(filename, sound=None):
         threshold = min_intensity
 
     # get pauses (silences) and speakingtime
-    textgrid = call(intensity, "To TextGrid (silences)", threshold3, minpause, 0.1, "silent", "sounding")
+    textgrid = call(
+        intensity,
+        "To TextGrid (silences)",
+        threshold3,
+        minpause,
+        0.1,
+        "silent",
+        "sounding",
+    )
     silencetier = call(textgrid, "Extract tier", 1)
     silencetable = call(silencetier, "Down to TableOfReal", "sounding")
     npauses = call(silencetable, "Get number of rows")
@@ -112,7 +120,14 @@ def speech_rate(filename, sound=None):
     # in order to allow nonzero starting times.
     intensity_duration = call(sound_from_intensity_matrix, "Get total duration")
     intensity_max = call(sound_from_intensity_matrix, "Get maximum", 0, 0, "Parabolic")
-    point_process = call(sound_from_intensity_matrix, "To PointProcess (extrema)", "Left", "yes", "no", "Sinc70")
+    point_process = call(
+        sound_from_intensity_matrix,
+        "To PointProcess (extrema)",
+        "Left",
+        "yes",
+        "no",
+        "Sinc70",
+    )
     # estimate peak positions (all peaks)
     numpeaks = call(point_process, "Get number of points")
     t = [call(point_process, "Get time from index", i + 1) for i in range(numpeaks)]
@@ -129,7 +144,7 @@ def speech_rate(filename, sound=None):
             timepeaks.append(t[i])
 
     # fill array with valid peaks: only intensity values if preceding
-# dip in intensity is greater than mindip
+    # dip in intensity is greater than mindip
     validpeakcount = 0
     currenttime = timepeaks[0]
     currentint = intensities[0]
@@ -166,7 +181,7 @@ def speech_rate(filename, sound=None):
     # Insert voiced peaks in TextGrid
     call(textgrid, "Insert point tier", 1, "syllables")
     for i in range(len(voicedpeak)):
-        position = (voicedpeak[i] * timecorrection)
+        position = voicedpeak[i] * timecorrection
         call(textgrid, "Insert point", 1, position, "")
 
     # return results
@@ -178,20 +193,22 @@ def speech_rate(filename, sound=None):
     except ZeroDivisionError:
         asd = 0
     speechrate_dictionary = {
-                             'sound': filename,
-                             'nsyll': voicedcount,
-                             'npause': npause,
-                             'dur(s)': originaldur,
-                             'phonationtime(s)': intensity_duration,
-                             'speechrate(nsyll / dur)': speakingrate,
-                             "articulation rate(nsyll / phonationtime)": articulationrate,
-                             "ASD(speakingtime / nsyll)": asd}
+        "sound": filename,
+        "nsyll": voicedcount,
+        "npause": npause,
+        "dur(s)": originaldur,
+        "phonationtime(s)": intensity_duration,
+        "speechrate(nsyll / dur)": speakingrate,
+        "articulation rate(nsyll / phonationtime)": articulationrate,
+        "ASD(speakingtime / nsyll)": asd,
+    }
     return speechrate_dictionary
 
 
 def get_files():
-    files = glob('sounds/asr-spanish-v1-carlfm01/audios/*.wav')
+    files = glob("sounds/asr-spanish-v1-carlfm01/audios/*.wav")
     return files[:5000]
+
 
 def syllable_count(word):
     word = word.lower()
@@ -211,14 +228,21 @@ def syllable_count(word):
 
 if __name__ == "__main__":
     files = get_files()
-    cols = ['soundname', 'nsyll', 'npause', 'dur(s)', 'phonationtime(s)', 'speechrate(nsyll / dur)', 'articulation '
-                                                                                                     'rate(nsyll / phonationtime)',
-            'ASD(speakingtime / nsyll)']
+    cols = [
+        "soundname",
+        "nsyll",
+        "npause",
+        "dur(s)",
+        "phonationtime(s)",
+        "speechrate(nsyll / dur)",
+        "articulation " "rate(nsyll / phonationtime)",
+        "ASD(speakingtime / nsyll)",
+    ]
     datalist = []
 
-    df_files = pd.read_csv('files_nsyll.csv')
+    df_files = pd.read_csv("files_nsyll.csv")
     df_files.set_index("wav_filename", inplace=True)
-    #df_files.loc["audios/"+file.split('\\')[-1], ["transcript"]]:
+    # df_files.loc["audios/"+file.split('\\')[-1], ["transcript"]]:
 
     n = len(files)
     i = 0
@@ -226,4 +250,4 @@ if __name__ == "__main__":
         speechrate_dictionary = speech_rate(file)
         datalist.append(speechrate_dictionary)
     df = pd.DataFrame(datalist)
-    df.to_csv('speechrate_data.csv')
+    df.to_csv("speechrate_data.csv")
