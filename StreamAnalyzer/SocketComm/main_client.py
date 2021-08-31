@@ -32,7 +32,7 @@ https://docs.conda.io/projects/conda/en/4.6.0/_downloads/52a95608c49671267e40c68
 
 CHUNK = 1024  # Bytes of data to process
 RATE = 44100 // 2
-SECS = 10
+SECS = 15
 BUFFER_SIZE = RATE * SECS  # BUFFER SIZE
 FPS = 1  # Number of frames per seconds
 
@@ -120,7 +120,9 @@ while time_elapsed <= 1024:  # go for a few seconds
         pitch_values: np.ndarray = pitch.selected_array["frequency"]
         # c.send(dumps(srate))
         vector_bytes = int_values.tobytes()
+        vector_bytes_pitch = pitch_values.tobytes()
         c.send(vector_bytes)
+        c.send(vector_bytes_pitch)
 
         time_elapsed = time.time() - start_time
         print(snd.duration)

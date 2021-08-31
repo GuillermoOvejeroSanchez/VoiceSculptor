@@ -13,7 +13,7 @@ from numpy_ringbuffer import RingBuffer
 # ---- Configuration ----
 CHUNK = 1024  # Bytes of data to process
 RATE = 44100 // 2
-SECS = 10
+SECS = 15
 BUFFER_SIZE = RATE * SECS  # BUFFER SIZE
 FPS = 1  # Number of frames per seconds
 HOST = "127.0.0.1"  # Symbolic name meaning all available interfaces
@@ -61,12 +61,13 @@ def get_data():
     global conn
     while True:
         data = conn.recv(BUFFER_SIZE)
+        print(data)
         data_np = process_data(data, i)
         print(data_np.shape)
         interval = seconds[-1] + 1
         seconds.append(interval)
-        first = max(0, interval - 10)
-        interval = max(10, interval)
+        first = max(0, interval - SECS)
+        interval = max(SECS, interval)
         print(first, interval)
         X = np.linspace(first, interval, num=data_np.shape[0])
         Y = data_np
@@ -77,12 +78,12 @@ def get_data():
 def update_graph_scatter(n):
     X, Y = get_data()
     data = plotly.graph_objs.Scatter(x=list(X), y=list(Y), name="Scatter", mode="lines")
-
+    y_max = max(Y)
     return {
         "data": [data],
         "layout": go.Layout(
             xaxis=dict(range=[min(X), max(X)]),
-            yaxis=dict(range=[115, 180]),
+            yaxis=dict(range=[min(Y), max(170, y_max)]),
         ),
     }
 
