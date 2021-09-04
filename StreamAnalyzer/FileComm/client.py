@@ -113,7 +113,7 @@ start_time = 0
 last_update = 0
 start_time = time.time()
 n_files = 0
-while time_elapsed <= 1024:  # go for a few seconds
+while time_elapsed <= 1800:  # go for 30mins
     if (time.time() - last_update) > (1.0 / FPS):
         last_update = time.time()
         buff = np.array(buffer)

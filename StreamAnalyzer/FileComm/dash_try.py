@@ -171,17 +171,14 @@ def update_first_row(n):
             value=speed,
             mode="gauge+number+delta",
             title={"text": "Speed"},
-            delta={"reference": 3.5},
+            delta={"reference": 4.25},
             gauge={
-                "axis": {"range": [0, 7]},
-                "steps": [
-                    {"range": [0, 1], "color": "#FFA500"},
-                    {"range": [5, 7], "color": "#FF4500"},
-                ],
+                "axis": {"range": [0, 8]},
+                "steps": [{"range": [3.5, 5], "color": "#66CA6C"}],
                 "threshold": {
-                    "line": {"color": "red", "width": 4},
-                    "thickness": 0.75,
-                    "value": 5,
+                    "line": {"color": "red", "width": 3},
+                    "thickness": 0.8,
+                    "value": 5.5,
                 },
             },
         )
