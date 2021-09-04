@@ -1,19 +1,22 @@
 import concurrent.futures
+import glob
+import json
 import logging
+import os
 import queue
 import signal
 import sys
 import time
-import json
+
 import numpy as np
 import parselmouth  # https://preaderselmouth.readthedocs.io/en/stable/
 import pyaudio
 import sounddevice as sa
+from datetime import datetime
 from numpy_ringbuffer import RingBuffer
 from scipy.io import wavfile
+
 from syllabe_nuclei import speech_rate
-import os
-import glob
 
 """
 Installed on conda environment on W10
@@ -45,13 +48,29 @@ def remove_data():
         os.remove(f)
 
 
+def del_n_files(start, n):
+    ini = time.time()
+    files = np.arange(start, n)
+    for f in files:
+        n = str(f).zfill(4)
+        try:
+            os.remove(f"data/intensity_{n}.npy")
+            os.remove(f"data/pitch_{n}.npy")
+            os.remove(f"data/speech_rate_{n}.json")
+        except:
+            pass
+    fin = time.time()
+    print(f"Time to del files: {fin-ini}")
+
+
 def signal_handler(signal=None, frame=None):
     print("\nprogram exiting gracefully")
     stream.stop_stream()
     stream.close()
     p.terminate()
     output = np.array(recorded_frames.queue, dtype=np.int16).flatten()
-    wavfile.write("example.wav", RATE, output)
+    timenow = datetime.now().strftime("%Y%m%d%H%M%S")
+    wavfile.write(f"output/audio_{timenow}.wav", RATE, output)
     remove_data()
     sys.exit(0)
 
@@ -99,7 +118,8 @@ while time_elapsed <= 1024:  # go for a few seconds
         last_update = time.time()
         buff = np.array(buffer)
         snd = get_sound(buff)
-        with concurrent.futures.ThreadPoolExecutor() as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+            executor.submit(del_n_files, n_files - 3, n_files - 2)
             future_srate = executor.submit(speech_rate, snd)
             future_intensity = executor.submit(get_intensity, snd)
             future_pitch = executor.submit(get_pitch, snd)
@@ -111,6 +131,7 @@ while time_elapsed <= 1024:  # go for a few seconds
         int_values: np.ndarray = intensity.values
         pitch_values: np.ndarray = pitch.selected_array["frequency"]
         n_files_str = str(n_files).zfill(4)
+        ini = time.time()
         np.save(f"data/intensity_{n_files_str}", int_values)
         np.save(f"data/pitch_{n_files_str}", pitch_values)
         with open(f"data/speech_rate_{n_files_str}.json", "w") as outfile:

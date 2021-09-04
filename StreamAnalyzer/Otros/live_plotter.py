@@ -19,6 +19,7 @@ from numpy.core.fromnumeric import shape
 from numpy.core.numeric import full
 from numpy_ringbuffer import RingBuffer
 from scipy import signal
+
 from syllabe_nuclei import speech_rate
 
 """

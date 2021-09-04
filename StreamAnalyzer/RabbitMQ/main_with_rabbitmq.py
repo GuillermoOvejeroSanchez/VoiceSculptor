@@ -24,6 +24,7 @@ from numpy.core.numeric import full
 from numpy_ringbuffer import RingBuffer
 from scipy.interpolate import BSpline, make_interp_spline
 from scipy.io import wavfile
+
 from syllabe_nuclei import speech_rate
 
 """
