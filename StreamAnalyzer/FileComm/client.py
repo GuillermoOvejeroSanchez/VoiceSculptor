@@ -8,6 +8,7 @@ import signal
 import sys
 import time
 
+from scipy import signal as scipy_signal
 import numpy as np
 import parselmouth  # https://preaderselmouth.readthedocs.io/en/stable/
 import pyaudio
@@ -88,6 +89,16 @@ def get_pitch(snd):
     return snd.to_pitch()
 
 
+def moving_average(x: np.ndarray, w: int):
+    return np.convolve(x, np.ones(w), "valid") / w
+
+
+def smooth_outliers(data):
+    b, a = scipy_signal.butter(3, 0.05)
+    y = scipy_signal.filtfilt(b, a, data)
+    return y
+
+
 signal.signal(signal.SIGINT, signal_handler)
 signal.signal(signal.SIGTERM, signal_handler)
 
@@ -129,7 +140,10 @@ while time_elapsed <= 1800:  # go for 30mins
             srate = future_srate.result()
 
         int_values: np.ndarray = intensity.values
+        # int_values = smooth_outliers(int_values)
         pitch_values: np.ndarray = pitch.selected_array["frequency"]
+        pitch_values = smooth_outliers(pitch_values)
+        # pitch_values = moving_average(pitch_values, 20)
         n_files_str = str(n_files).zfill(4)
         ini = time.time()
         np.save(f"data/intensity_{n_files_str}", int_values)

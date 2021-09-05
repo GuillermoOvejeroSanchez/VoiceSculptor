@@ -110,7 +110,7 @@ def return_intensity(n):
         "data": [data],
         "layout": go.Layout(
             xaxis=dict(range=[min(X), max(X)]),
-            yaxis=dict(range=[100, 170]),
+            yaxis=dict(range=[100, 180]),
         ),
     }
 
@@ -121,7 +121,7 @@ def return_pitch(n):
     return {
         "data": [data],
         "layout": go.Layout(
-            xaxis=dict(range=[min(X), max(X)]), yaxis=dict(range=[0, 600])
+            xaxis=dict(range=[min(X), max(X)]), yaxis=dict(range=[0, max(200, max(Y))])
         ),
     }
 
@@ -174,7 +174,11 @@ def update_first_row(n):
             delta={"reference": 4.25},
             gauge={
                 "axis": {"range": [0, 8]},
-                "steps": [{"range": [3.5, 5], "color": "#66CA6C"}],
+                "steps": [
+                    {"range": [3.5, 4], "color": "#87ca66"},
+                    {"range": [4, 4.5], "color": "#66CA6C"},
+                    {"range": [4.5, 5], "color": "#87ca66"},
+                ],
                 "threshold": {
                     "line": {"color": "red", "width": 3},
                     "thickness": 0.8,

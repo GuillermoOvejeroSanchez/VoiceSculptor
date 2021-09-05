@@ -10,6 +10,7 @@ from flask import Flask, render_template, request, send_from_directory
 from jinja2 import Environment, FileSystemLoader
 from scipy import signal
 from syllabe_nuclei import speech_rate
+from pathlib import Path
 
 matplotlib.use("Agg")
 import json
@@ -42,9 +43,12 @@ def init_app():
 
 app = init_app()
 
+path_sounds = Path("static/sounds/")
 
+# https://cloud.ibm.com/apidocs/speech-to-text?code=python
 def ibm_watson(file):
-    with open("static/sounds/" + file, "rb") as audio_file:
+    path_file = path_sounds / file
+    with open(str(path_file), "rb") as audio_file:
         authenticator = IAMAuthenticator("jf1ihfTWwiavbEwfUN1SYEgs_8UaOH5UyeZpzNy573sA")
         speech_to_text = SpeechToTextV1(authenticator=authenticator)
 
@@ -65,14 +69,25 @@ def ibm_watson(file):
         return transcript
 
 
-@app.route("/base/<path:filename>")
-def base_static(filename):
-    return send_from_directory(app.root_path + "static/sounds/", filename)
+from scipy import signal as scipy_signal
+
+
+def smooth_outliers(data):
+    b, a = scipy_signal.butter(3, 0.05)
+    y = scipy_signal.filtfilt(b, a, data)
+    return y
+
+
+# @app.route("/base/<path:filename>")
+# def base_static(filename):
+#     file_path = app.root_path + path_sounds
+#     return send_from_directory(file_path, filename)
 
 
 def plot_intensity(intensity, pitch):
     Y = intensity.values
     Y = Y.flatten()
+    Y = smooth_outliers(Y)
     X = intensity.xs()
     data = [{"x": X, "y": Y}]
     div = plotly.offline.plot(data, include_plotlyjs=bool, output_type="div")
@@ -81,6 +96,7 @@ def plot_intensity(intensity, pitch):
 
 def plot_pitch(snd, pitch):
     Y = pitch.selected_array["frequency"]
+    Y = smooth_outliers(Y)
     X = pitch.xs()
     data = [{"x": X, "y": Y}]
     div = plotly.offline.plot(data, include_plotlyjs=bool, output_type="div")
@@ -104,9 +120,11 @@ def add_header(r):
 def report():
     file = request.args.get("file")
     file = file + ".wav"
-    transcript = ibm_watson(file)
+    transcript = ""  # ibm_watson(file)
 
-    snd = parselmouth.Sound("static/sounds/" + file)
+    path_file = path_sounds / file
+    print(path_file.absolute())
+    snd = parselmouth.Sound(str(path_file))
     csv = speech_rate(snd)
     csv = pd.DataFrame(csv.items())
     csv = csv.iloc[1:]
@@ -114,17 +132,12 @@ def report():
     intensity = snd.to_intensity()
     pitch = snd.to_pitch()
 
-    b, a = signal.butter(3, 0.05)
-    zi = signal.lfilter_zi(b, a)
-    z, _ = signal.lfilter(b, a, intensity.values[0][:], zi=zi * intensity.values[0][0])
-    z1, _ = signal.lfilter(b, a, z, zi=zi * z[0])
-    intensity.values[0][:] = z1
-
     div_intensity = plot_intensity(intensity, pitch)
     div_pitch = plot_pitch(snd, pitch)
 
     env = Environment(loader=FileSystemLoader("."))
-    template = env.get_template("report.html")
+    template_path = "report.html"
+    template = env.get_template(str(template_path))
 
     template_vars = {
         "file": file,

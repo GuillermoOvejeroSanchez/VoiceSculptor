@@ -29,10 +29,11 @@ table tbody tr {
 
 table tbody tr:nth-of-type(even) {
   background-color: #f3f3f3;
+  border-color: #119dff;
 }
 
 table tbody tr:last-of-type {
-  border-bottom: 2px solid cornflowerblue;
+  border-bottom: 2px solid 119dff;
 }
 
 hr.rounded {
