@@ -19,9 +19,32 @@ import seaborn as sns
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson import SpeechToTextV1
 
+import dash
+import dash_html_components as html
+import plotly.graph_objects as go
+import plotly
+
+
+def init_dashboard(server):
+    """Create a Plotly Dash dashboard."""
+    dash_app = dash.Dash(server=server, routes_pathname_prefix="/")
+    dash_app.layout = html.Div(id="dash-container")
+
+    return dash_app.server
+
+
+def init_app():
+    app = Flask(__name__)
+    with app.app_context():
+        app = init_dashboard(app)
+    return app
+
+
+app = init_app()
+
 
 def ibm_watson(file):
-    with open("./sounds/" + file, "rb") as audio_file:
+    with open("static/sounds/" + file, "rb") as audio_file:
         authenticator = IAMAuthenticator("jf1ihfTWwiavbEwfUN1SYEgs_8UaOH5UyeZpzNy573sA")
         speech_to_text = SpeechToTextV1(authenticator=authenticator)
 
@@ -33,6 +56,7 @@ def ibm_watson(file):
             audio=audio_file,
             content_type="audio/wav",
             model="es-ES_BroadbandModel",
+            timestamps=True,
         )
         transcript = ""
         results = response.get_result()
@@ -41,58 +65,26 @@ def ibm_watson(file):
         return transcript
 
 
-app = Flask(__name__)
-
-
 @app.route("/base/<path:filename>")
 def base_static(filename):
-    return send_from_directory(app.root_path + "sounds/", filename)
+    return send_from_directory(app.root_path + "static/sounds/", filename)
 
 
-def draw_intensity(intensity, pitch):
-    sns.set(
-        rc={"figure.figsize": (12, 4)}
-    )  # Use seaborn's default style to make attractive graphs
-    plt.rcParams["figure.dpi"] = 150  # Show images nicely
-    plt.ylabel("Intensity [dB]")
-    plt.xlabel("Seconds")
-    plt.grid(True)
-    plt.xlim([0, pitch.xmax])
-    plt.plot(intensity.xs(), intensity.values.T, linewidth=3, color="w")
-    plt.plot(intensity.xs(), intensity.values.T, linewidth=1)
-    plt.savefig("static/img/intensity.png")
-    plt.close()
+def plot_intensity(intensity, pitch):
+    Y = intensity.values
+    Y = Y.flatten()
+    X = intensity.xs()
+    data = [{"x": X, "y": Y}]
+    div = plotly.offline.plot(data, include_plotlyjs=bool, output_type="div")
+    return div
 
 
-def plot_wave(snd, pitch):
-    sns.set(
-        rc={"figure.figsize": (12, 4)}
-    )  # Use seaborn's default style to make attractive graphs
-    plt.rcParams["figure.dpi"] = 150  # Show images nicely
-    plt.ylabel("Amplitude")
-    plt.xlabel("Seconds")
-    plt.grid(True)
-    plt.xlim([0, pitch.xmax])
-    plt.plot(snd.xs(), snd.values.T)
-    plt.savefig("static/img/wave.png")
-    plt.close()
-
-
-def plotOnGraph(pitch, color):
-    sns.set(
-        rc={"figure.figsize": (12, 4)}
-    )  # Use seaborn's default style to make attractive graphs
-    plt.rcParams["figure.dpi"] = 150  # Show images nicely
-    plt.ylim(0, 350)
-    plt.ylabel("frequency [Hz]")
-    plt.xlabel("Seconds")
-    plt.grid(True)
-    pitch_values = pitch.selected_array["frequency"]
-    pitch_values[pitch_values == 0] = np.nan
-    plt.xlim([0, pitch.xmax])
-    plt.plot(pitch.xs(), pitch_values, "o", markersize=2.5, color=color)
-    plt.savefig("static/img/pitch.png")
-    plt.close()
+def plot_pitch(snd, pitch):
+    Y = pitch.selected_array["frequency"]
+    X = pitch.xs()
+    data = [{"x": X, "y": Y}]
+    div = plotly.offline.plot(data, include_plotlyjs=bool, output_type="div")
+    return div
 
 
 @app.after_request
@@ -112,10 +104,9 @@ def add_header(r):
 def report():
     file = request.args.get("file")
     file = file + ".wav"
-    # file = "pulp-fiction.wav"
-    transcript = ""  # ibm_watson(file)
+    transcript = ibm_watson(file)
 
-    snd = parselmouth.Sound("./sounds/" + file)
+    snd = parselmouth.Sound("static/sounds/" + file)
     csv = speech_rate(snd)
     csv = pd.DataFrame(csv.items())
     csv = csv.iloc[1:]
@@ -129,9 +120,8 @@ def report():
     z1, _ = signal.lfilter(b, a, z, zi=zi * z[0])
     intensity.values[0][:] = z1
 
-    draw_intensity(intensity, pitch)
-    plot_wave(snd, pitch)
-    plotOnGraph(pitch, "r")
+    div_intensity = plot_intensity(intensity, pitch)
+    div_pitch = plot_pitch(snd, pitch)
 
     env = Environment(loader=FileSystemLoader("."))
     template = env.get_template("report.html")
@@ -140,11 +130,9 @@ def report():
         "file": file,
         "transcripcion": transcript,
         "pausas": csv.iloc[:3].to_html(),
-        "mensaje": "Muchas pausas corrige x",
-        "intensidad": "intensity.png",
+        "intensity": div_intensity,
         "velocimetro": csv.iloc[3:].to_html(),
-        "pitch": "pitch.png",
-        "wave": "wave.png",
+        "pitch": div_pitch,
     }
 
     html_out = template.render(template_vars)
@@ -152,7 +140,5 @@ def report():
 
 
 logging.basicConfig()
-
-
 if __name__ == "__main__":
     app.run()
