@@ -1,5 +1,5 @@
-choco install python --version=3.8.0
-python -m pip install -U pip
+choco install python --version=3.8.0 | sudo apt-get install python
+python -m pip install -U pip | py -m ensurepip --upgrade
 pip install setuptools
 pip install pipenv
 pipenv shell

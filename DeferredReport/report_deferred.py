@@ -1,43 +1,22 @@
 import logging
-import os
-import sys
-
 import matplotlib
-import numpy as np
 import pandas as pd
 import parselmouth  # https://parselmouth.readthedocs.io/en/stable/
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, request
 from jinja2 import Environment, FileSystemLoader
-from scipy import signal
 from syllabe_nuclei import speech_rate
 from pathlib import Path
 
 matplotlib.use("Agg")
-import json
-
-import matplotlib.pyplot as plt
-import seaborn as sns
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_watson import SpeechToTextV1
-
-import dash
-import dash_html_components as html
-import plotly.graph_objects as go
 import plotly
 
 
-def init_dashboard(server):
-    """Create a Plotly Dash dashboard."""
-    dash_app = dash.Dash(server=server, routes_pathname_prefix="/")
-    dash_app.layout = html.Div(id="dash-container")
-
-    return dash_app.server
 
 
 def init_app():
     app = Flask(__name__)
-    with app.app_context():
-        app = init_dashboard(app)
     return app
 
 
