@@ -4,9 +4,9 @@ import socket
 from collections import deque
 
 import dash
+from dash import dcc
+from dash import html
 import dash_bootstrap_components as dbc
-import dash_core_components as dcc
-import dash_html_components as html
 import numpy as np
 import plotly
 import plotly.graph_objs as go
@@ -137,7 +137,11 @@ def play_pause(n):
         return "Play"
     else:
         print("now is playing, hit again to stop")
-        os.system("python3 client.py &")
+        if os.name == "posix":
+            os.system("python3 client.py &")
+        else:
+            print(os.name)
+            os.system("python client.py &")
         return "Stop"
 
 

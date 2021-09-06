@@ -2,12 +2,22 @@
 
 ## Iniciar Proyecto
 
+Windows: install pipenv
+
+```bash
+py -m ensurepip --upgrade
+```
+
 Windows: instalar PyAudio desde el fichero .whl
+
+```bash
+pip install PyAudio-0.2.11-cp38-cp38-win_amd64
+```
 
 Instalar el resto de paquetes necesarios, desde requirements.txt o creando un pipenv y ejecutando:
 
 ```bash
-pipenv install
+pip install -r requirements.txt
 ```
 
 ## Report
