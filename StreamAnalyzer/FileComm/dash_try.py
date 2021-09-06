@@ -4,8 +4,8 @@ import socket
 from collections import deque
 
 import dash
-from dash import dcc
-from dash import html
+import dash_core_components as dcc
+import dash_html_components as html
 import dash_bootstrap_components as dbc
 import numpy as np
 import plotly
