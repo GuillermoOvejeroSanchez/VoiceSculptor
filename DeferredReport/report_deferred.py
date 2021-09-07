@@ -13,8 +13,6 @@ from ibm_watson import SpeechToTextV1
 import plotly
 
 
-
-
 def init_app():
     app = Flask(__name__)
     return app
@@ -105,6 +103,7 @@ def report():
     print(path_file.absolute())
     snd = parselmouth.Sound(str(path_file))
     csv = speech_rate(snd)
+    print(csv)
     csv = pd.DataFrame(csv.items())
     csv = csv.iloc[1:]
 
@@ -117,7 +116,6 @@ def report():
     env = Environment(loader=FileSystemLoader("."))
     template_path = "report.html"
     template = env.get_template(str(template_path))
-
     template_vars = {
         "file": file,
         "transcripcion": transcript,

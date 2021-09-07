@@ -193,11 +193,11 @@ def speech_rate(filename, sound=None):
     except ZeroDivisionError:
         asd = 0
     speechrate_dictionary = {
-        "sound": filename,
+        "sound": "",
         "nsyll": voicedcount,
         "npause": npause,
         "dur(s)": originaldur,
-        "phonationtime(s)": intensity_duration,
+        "phonationtime(s)": speakingtot,
         "speechrate(nsyll / dur)": speakingrate,
         "articulation rate(nsyll / phonationtime)": articulationrate,
         "ASD(speakingtime / nsyll)": asd,
