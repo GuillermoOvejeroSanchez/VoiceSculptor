@@ -145,7 +145,11 @@ def speech_rate(sound=None):
     # fill array with valid peaks: only intensity values if preceding
     # dip in intensity is greater than mindip
     validpeakcount = 0
-    currenttime = timepeaks[0]
+    try:
+        currenttime = timepeaks[0]
+    except IndexError:
+        print("[WARNING] - Your mic is not getting any input!")
+        return {}
     currentint = intensities[0]
     validtime = []
     for p in range(peakcount - 1):
