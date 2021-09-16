@@ -2,7 +2,7 @@ import glob
 import random
 import socket
 from collections import deque
-
+import os
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -75,8 +75,14 @@ content = html.Div(
 )
 app.layout = content
 
-seconds = deque(maxlen=2)
-seconds.append(1)
+
+def start_deque():
+    seconds = deque(maxlen=2)
+    seconds.append(1)
+    return seconds
+
+
+seconds = start_deque()
 
 import json
 
@@ -101,6 +107,12 @@ def get_data(f_type="intensity"):
     Y = data.flatten()
     X = np.linspace(first, interval, num=Y.shape[0])
     return X, Y
+
+
+def remove_data():
+    files = glob.glob("data/*")
+    for f in files:
+        os.remove(f)
 
 
 def return_intensity(n):
@@ -134,13 +146,17 @@ from subprocess import check_call
 def play_pause(n):
     if n % 2 == 0:
         check_call(["pkill", "-f", "client.py"])
+        remove_data()
         return "Play"
     else:
         print("now is playing, hit again to stop")
+        print(os.name)
+        remove_data()
+        global seconds
+        seconds = start_deque()
         if os.name == "posix":
             os.system("python3 client.py &")
         else:
-            print(os.name)
             os.system("python client.py &")
         return "Stop"
 
