@@ -2,6 +2,11 @@
 
 ## Iniciar Proyecto
 
+```bash
+choco install python --version=3.8.0
+sudo apt-get install python
+```
+
 Windows: install pipenv
 
 ```bash
@@ -11,6 +16,7 @@ py -m ensurepip --upgrade
 Windows: instalar PyAudio desde el fichero .whl
 
 ```bash
+pip install wheel
 pip install PyAudio-0.2.11-cp38-cp38-win_amd64
 ```
 
@@ -31,7 +37,6 @@ Los manda a traves de un Socket
 Live plotter (basico, se puede mejorar con las funciones de animacion de matplotlib) recive la informacion de un Socket y plotea la informacion
 Que mas informacion podemos sacar??
 Para probar he instalado el Voicemeteer y cogiendo el audio de las locuciones y presentaciones que grabamos, para no tener que hablar yo si no poder analizar eso grabado como si fuese en tiempo real
-
 
 ## Performance
 
