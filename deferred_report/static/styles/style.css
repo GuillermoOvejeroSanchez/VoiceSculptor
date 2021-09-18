@@ -8,6 +8,22 @@ audio {
   align-items: center;
 }
 
+.button_home a{
+  display:inline-block;
+  padding:0.5em 2em;
+  border:0.16em solid black;  
+  box-sizing: border-box;
+  text-decoration:none;
+  font-weight:400;
+  color: black;
+  text-align:center;
+  transition: all 0.15s;
+  }
+.button_home:hover a{
+  color: darkgray;
+  border-color: darkgray;
+  }
+
 table {
   border-collapse: collapse;
   margin: 25px 0;

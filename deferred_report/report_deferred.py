@@ -4,7 +4,7 @@ import matplotlib
 from scipy import signal as scipy_signal
 import pandas as pd
 import parselmouth  # https://parselmouth.readthedocs.io/en/stable/
-from flask import Flask, request, redirect, url_for
+from flask import Flask, request, redirect, url_for,render_template
 from jinja2 import Environment, FileSystemLoader
 from syllabe_nuclei import speech_rate
 from pathlib import Path
@@ -43,8 +43,10 @@ def ibm_watson(file):
         )
         transcript = ""
         results = response.get_result()
+        print(results)
         for result in results["results"]:
             transcript += result["alternatives"][0]["transcript"]
+            transcript = transcript[:-1] + ". "
         return transcript
 
 
@@ -88,19 +90,11 @@ def add_header(r):
 
 @app.route("/")
 def index():
-    return """<!doctype html>
-<html>
-  <head>
-    <title>File Upload</title>
-  </head>
-  <body>
-    <h1>File Upload</h1>
-    <form method="POST" action="" enctype="multipart/form-data">
-      <p><input type="file" name="file"></p>
-      <p><input type="submit" value="Submit"></p>
-    </form>
-  </body>
-</html>"""
+    env = Environment(loader=FileSystemLoader("."))
+    template_path = "index.html"
+    template = env.get_template(str(template_path))
+    html_out = template.render()
+    return html_out
 
 
 @app.route("/", methods=["POST"])
@@ -114,10 +108,9 @@ def upload_file():
 @app.route("/report")
 def report():
     file = request.args.get("file")
-    if file[-4:] != ".wav":
+    if file[-4:] not in {".wav",".mp3"}:
         file = file + ".wav"
-    transcript = ""  # ibm_watson(file)
-    # send_from_directory("./", file)
+    transcript = ibm_watson(file)
 
     path_file = path_sounds / file
     print(path_file.absolute())
