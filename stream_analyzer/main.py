@@ -16,13 +16,13 @@ from numpy_ringbuffer import RingBuffer
 import json
 pio.templates.default = "seaborn"
 
-load_dotenv()
 # ---- Configuration ----
+load_dotenv()
 SECS = int(os.getenv('SECS',10))
-CHUNK = 1024  # Bytes of data to process
-RATE = 44100 // 2
+RATE = int(os.getenv('SAMPLE_RATE',44100))
+FPS = int(os.getenv('FPS',1))  # Number of frames per seconds
+
 BUFFER_SIZE = RATE * SECS  # BUFFER SIZE
-FPS = 1  # Number of frames per seconds
 
 # Style
 TEXT_STYLE = {"textAlign": "center", "color": "#191970"}
