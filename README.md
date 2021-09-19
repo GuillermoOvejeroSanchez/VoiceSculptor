@@ -4,32 +4,28 @@
 
 ### Windows
 - Install Python 3.8
-Preferred method of install is via [chocolatey](https://chocolatey.org/install), a Windows package manager.
+Preferred method of install is via [Chocolatey](https://chocolatey.org/install), a Windows package manager.
 
-Install chocolatey
-```shell
+Install Chocolatey
+```powershell
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 ```
-Install python 3.8
-```shell
+Install Python 3.8
+```powershell
 choco install python --version=3.8.0
 ```
 But could also be done with [Anaconda](https://www.anaconda.com/products/individual)
 
-```bash
+```powershell
 py -m ensurepip --upgrade
 pip install wheel
 pip install PyAudio-0.2.11-cp38-cp38-win_amd64
+pip install -r requirements.txt
 ```
 
 ### Unix
 ```bash
 sudo apt-get install python3.8
-```
-
-## Install required libraries
-
-```bash
 pip install -r requirements.txt
 ```
 
@@ -37,7 +33,7 @@ pip install -r requirements.txt
 
 ### Deferred Report
 
-Enter to the folder "deferred_report" and run:
+Enter to the folder "deferred_report" and run the following command:
 ```bash
 python report_deferred.py
 ```
@@ -49,7 +45,7 @@ Upload a file in .wav or .mp3 format
 ![Alt text](images/use_guide_deferred.png)
 
 ## Stream Analyzer
-Enter to the folder "stream_analyzer" and run:
+Enter to the folder "stream_analyzer" and run the following command:
 ```bash
 python main.py
 ```
@@ -62,7 +58,7 @@ Click on the 'play' button to start recording and analyzing your speech.
 
 ### Change settings
 
-To change settings for the stream analyzer app enter .env file and change the following values:
+To change settings for the stream analyzer app enter in the 'stream_analyzer/.env' file and change the following values:
 
 ```env
 SECS=15
