@@ -3,22 +3,28 @@
 ## Start Project
 
 ### Windows
+
 - Install Python 3.8
 Preferred method of install is via [Chocolatey](https://chocolatey.org/install), a Windows package manager.
 
 Enter to the Windows PowerShell:
+
 - Press 'Win+R'
 - Type 'powershell'
 - Hit Enter
 
 Install Chocolatey
+
 ```powershell
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 ```
+
 Install Python 3.8
+
 ```powershell
 choco install python --version=3.8.0
 ```
+
 But could also be done with [Anaconda](https://www.anaconda.com/products/individual)
 
 ```powershell
@@ -29,6 +35,7 @@ pip install -r requirements.txt
 ```
 
 ### Unix
+
 ```bash
 sudo apt-get install python3.8
 pip install -r requirements.txt
@@ -39,9 +46,11 @@ pip install -r requirements.txt
 ### Deferred Report
 
 Enter to the folder "deferred_report" and run the following command:
+
 ```bash
 python report_deferred.py
 ```
+
 Then access to localhost in port 5000:
 
 [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
@@ -50,16 +59,18 @@ Upload a file in .wav or .mp3 format
 ![Alt text](images/use_guide_deferred.png)
 
 ## Stream Analyzer
+
 Enter to the folder "stream_analyzer" and run the following command:
+
 ```bash
 python main.py
 ```
+
 Then access to localhost in port 5050:
 
 [http://127.0.0.1:5050/](http://127.0.0.1:5050/)
 
 Click on the 'play' button to start recording and analyzing your speech.
-
 
 ### Change settings
 
