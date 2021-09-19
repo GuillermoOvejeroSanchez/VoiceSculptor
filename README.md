@@ -1,46 +1,81 @@
-# TFG 2020 : Analizador de Voz
+# Voice Sculptor : TFG
 
-## Iniciar Proyecto
+## Start Project
 
-```bash
-choco install python --version=3.8.0
-sudo apt-get install python
+### Windows
+- Install Python 3.8
+Preferred method of install is via [chocolatey](https://chocolatey.org/install), a Windows package manager.
+
+Install chocolatey
+```shell
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 ```
-
-Windows: install pipenv
+Install python 3.8
+```shell
+choco install python --version=3.8.0
+```
+But could also be done with [Anaconda](https://www.anaconda.com/products/individual)
 
 ```bash
 py -m ensurepip --upgrade
-```
-
-Windows: instalar PyAudio desde el fichero .whl
-
-```bash
 pip install wheel
 pip install PyAudio-0.2.11-cp38-cp38-win_amd64
 ```
 
-Instalar el resto de paquetes necesarios, desde requirements.txt o creando un pipenv y ejecutando:
+### Unix
+```bash
+sudo apt-get install python3.8
+```
+
+## Install required libraries
 
 ```bash
 pip install -r requirements.txt
 ```
 
+## Use Guide
+
+### Deferred Report
+
+Enter to the folder "deferred_report" and run:
+```bash
+python report_deferred.py
+```
+Then access to localhost in port 5000:
+
+[http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+
+Upload a file in .wav or .mp3 format
+(image)
+
+## Stream Analyzer
+Enter to the folder "stream_analyzer" and run:
+```bash
+python main.py
+```
+Then access to localhost in port 5050:
+
+[http://127.0.0.1:5000/](http://127.0.0.1:5050/)
+
+Click on the 'play' button to start recording and analyzing your speech.
+
+
+## Change settings
+
+
 ## Report
 
-Usa un servidor de Flask donde muestra la informacion sobre pausas, velocidad, intensidad, pitch
+Uses a Flask server to show the transcription and information about pauses, speech rate, intensity and pitch.
 
 ## Live Audio
 
-Usa el callback de pyaudio para ir guardando los chunks del audio en un buffer circular que tiene 5 Segundos (es variable) para almacenar datos.
-Los manda a traves de un Socket
-Live plotter (basico, se puede mejorar con las funciones de animacion de matplotlib) recive la informacion de un Socket y plotea la informacion
-Que mas informacion podemos sacar??
-Para probar he instalado el Voicemeteer y cogiendo el audio de las locuciones y presentaciones que grabamos, para no tener que hablar yo si no poder analizar eso grabado como si fuese en tiempo real
+Uses PyAudio callback to save audio chunks in a variable circular buffer.
+A Dash web server plots the information stored in a common folder. Plots information about pauses, syllables, speech rate, intensity and pitch.
 
-## Performance
 
-```ipython
+## Parselmouth Performance
+
+```python
 In[1] %timeit snd = parselmouth.Sound("holamesa.wav")
 170 µs ± 3.22 µs per loop (mean ± std. dev. of 7 runs, 10000 loops each)
 
@@ -80,6 +115,4 @@ In [3]: %timeit snd.to_pitch()
 
 In [4]: %timeit snd.to_intensity()
 447 ms ± 595 µs per loop (mean ± std. dev. of 7 runs, 1 loop each)
-
-
 ```
