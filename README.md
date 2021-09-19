@@ -46,7 +46,7 @@ Then access to localhost in port 5000:
 [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
 
 Upload a file in .wav or .mp3 format
-(image)
+![Alt text](images/use_guide_deferred.png)
 
 ## Stream Analyzer
 Enter to the folder "stream_analyzer" and run:
@@ -55,13 +55,22 @@ python main.py
 ```
 Then access to localhost in port 5050:
 
-[http://127.0.0.1:5000/](http://127.0.0.1:5050/)
+[http://127.0.0.1:5050/](http://127.0.0.1:5050/)
 
 Click on the 'play' button to start recording and analyzing your speech.
 
 
-## Change settings
+### Change settings
 
+To change settings for the stream analyzer app enter .env file and change the following values:
+
+```env
+SECS=15
+SAMPLE_RATE=44100
+FPS=1
+```
+
+This are the ones that work fine by default.
 
 ## Report
 
@@ -71,7 +80,6 @@ Uses a Flask server to show the transcription and information about pauses, spee
 
 Uses PyAudio callback to save audio chunks in a variable circular buffer.
 A Dash web server plots the information stored in a common folder. Plots information about pauses, syllables, speech rate, intensity and pitch.
-
 
 ## Parselmouth Performance
 
