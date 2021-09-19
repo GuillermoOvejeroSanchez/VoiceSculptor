@@ -6,6 +6,11 @@
 - Install Python 3.8
 Preferred method of install is via [Chocolatey](https://chocolatey.org/install), a Windows package manager.
 
+Enter to the Windows PowerShell:
+- Press 'Win+R'
+- Type 'powershell'
+- Hit Enter
+
 Install Chocolatey
 ```powershell
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
