@@ -8,22 +8,25 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 import numpy as np
+import subprocess
 import plotly
 import plotly.graph_objs as go
 import plotly.io as pio
 from dash.dependencies import Input, Output
+from dotenv import load_dotenv
 from numpy_ringbuffer import RingBuffer
-
+import json
 pio.templates.default = "seaborn"
 
+load_dotenv()
 # ---- Configuration ----
+SECS = int(os.getenv('SECS',10))
 CHUNK = 1024  # Bytes of data to process
 RATE = 44100 // 2
-SECS = 15
 BUFFER_SIZE = RATE * SECS  # BUFFER SIZE
 FPS = 1  # Number of frames per seconds
-i = 0
-# -----------------------
+
+# Style
 TEXT_STYLE = {"textAlign": "center", "color": "#191970"}
 CONTENT_STYLE = {
     "margin-left": "5%",
@@ -31,7 +34,9 @@ CONTENT_STYLE = {
     "top": 0,
     "padding": "20px 10px",
 }
+####################
 
+client_process = None
 app = dash.Dash(__name__)
 srate_row = dbc.Row(
     [
@@ -83,8 +88,6 @@ def start_deque():
 
 
 seconds = start_deque()
-
-import json
 
 
 def load_json(filename):
@@ -138,14 +141,14 @@ def return_pitch(n):
     }
 
 
-import os
-from subprocess import check_call
-
-
 @app.callback(Output("play", "children"), [Input("play", "n_clicks")])
 def play_pause(n):
-    if n % 2 == 0:
-        check_call(["pkill", "-f", "client.py"])
+    global client_process
+    if n == 0:
+        remove_data()
+        return "Play"
+    elif n % 2 == 0 and client_process is not None:
+        client_process.terminate()
         remove_data()
         return "Play"
     else:
@@ -154,10 +157,7 @@ def play_pause(n):
         remove_data()
         global seconds
         seconds = start_deque()
-        if os.name == "posix":
-            os.system("python3 client.py &")
-        else:
-            os.system("python client.py &")
+        client_process = subprocess.Popen(args=["python","client.py"])
         return "Stop"
 
 

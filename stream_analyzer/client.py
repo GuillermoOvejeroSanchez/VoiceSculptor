@@ -16,17 +16,17 @@ import sounddevice as sa
 from datetime import datetime
 from numpy_ringbuffer import RingBuffer
 from scipy.io import wavfile
-
+from dotenv import load_dotenv
 from syllabe_nuclei import speech_rate
 
 """
 Installed on conda environment on W10
 https://docs.conda.io/projects/conda/en/4.6.0/_downloads/52a95608c49671267e40c689e0bc00ca/conda-cheatsheet.pdf
 """
-
+load_dotenv()
+SECS = int(os.getenv('SECS',10))
 CHUNK = 1024  # Bytes of data to process
 RATE = 44100 // 2
-SECS = 15
 BUFFER_SIZE = RATE * SECS  # BUFFER SIZE
 FPS = 1  # Number of frames per seconds
 
