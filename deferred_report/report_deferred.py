@@ -1,10 +1,9 @@
 import logging
-from flask.helpers import send_from_directory
 import matplotlib
 from scipy import signal as scipy_signal
 import pandas as pd
 import parselmouth  # https://parselmouth.readthedocs.io/en/stable/
-from flask import Flask, request, redirect, url_for,render_template
+from flask import Flask, request, redirect, url_for
 from jinja2 import Environment, FileSystemLoader
 from syllabe_nuclei import speech_rate
 from pathlib import Path

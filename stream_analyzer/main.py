@@ -1,6 +1,4 @@
 import glob
-import random
-import socket
 from collections import deque
 import os
 import dash
@@ -220,7 +218,7 @@ if __name__ == "__main__":
     app.run_server(
         debug=True,
         host="127.0.0.1",
-        port="8080",
+        port="5050",
         dev_tools_ui=False,
         dev_tools_props_check=False,
     )

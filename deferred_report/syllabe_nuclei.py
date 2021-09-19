@@ -61,9 +61,6 @@
 # I changed all the variable names so they are human readable
 
 import math
-from glob import glob
-
-import pandas as pd
 import parselmouth
 from parselmouth.praat import call
 

@@ -62,8 +62,6 @@
 
 import math
 from glob import glob
-
-import pandas as pd
 import parselmouth
 from parselmouth.praat import call
 
