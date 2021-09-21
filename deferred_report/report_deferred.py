@@ -27,7 +27,7 @@ path_sounds = Path("static/sounds/")
 def ibm_watson(file):
     path_file = path_sounds / file
     with open(str(path_file), "rb") as audio_file:
-        authenticator = IAMAuthenticator("jf1ihfTWwiavbEwfUN1SYEgs_8UaOH5UyeZpzNy573sA")
+        authenticator = IAMAuthenticator("APIKEY_IBM_WATSON")
         speech_to_text = SpeechToTextV1(authenticator=authenticator)
 
         speech_to_text.set_service_url(
